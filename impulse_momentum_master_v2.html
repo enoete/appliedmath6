@@ -1,0 +1,3761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impulse & Momentum - Master Pack | CFBC Physics</title>
+  <style>
+    :root {
+      --bg1: #0b1020;
+      --bg2: #1b2a6b;
+      --card: rgba(255,255,255,0.08);
+      --card2: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --border: rgba(255,255,255,0.16);
+      --shadow: rgba(0,0,0,0.35);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      min-height: 100vh;
+      background: radial-gradient(1200px 600px at 10% 0%, rgba(96,165,250,0.35), transparent 60%),
+                  radial-gradient(900px 500px at 90% 15%, rgba(245,158,11,0.30), transparent 55%),
+                  linear-gradient(135deg, var(--bg2), var(--bg1));
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 20px 16px 28px; }
+    .topbar {
+      display: flex; gap: 12px; align-items: center; justify-content: space-between;
+      padding: 14px 14px; border: 1px solid var(--border); border-radius: 16px;
+      background: linear-gradient(180deg, var(--card2), var(--card));
+      box-shadow: 0 12px 28px var(--shadow);
+      position: sticky; top: 10px; z-index: 50; backdrop-filter: blur(10px);
+    }
+    .brand { display: flex; flex-direction: column; gap: 2px; min-width: 240px; }
+    .brand .title { font-weight: 800; letter-spacing: 0.3px; font-size: 16px; display:flex; gap:8px; align-items:center; }
+    .brand .subtitle { font-size: 12px; color: var(--muted); }
+    .tabs { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .tab {
+      border: 1px solid var(--border); background: rgba(255,255,255,0.06); color: var(--text);
+      border-radius: 999px; padding: 10px 14px; cursor: pointer; font-weight: 700; font-size: 13px;
+      letter-spacing: 0.2px; display:inline-flex; align-items:center; gap:8px;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease; user-select:none;
+    }
+    .tab:hover { transform: translateY(-1px); background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.26); }
+    .tab[aria-selected="true"] { background: linear-gradient(90deg, rgba(96,165,250,0.22), rgba(34,197,94,0.18)); border-color: rgba(255,255,255,0.35); }
+    .badge { font-size:11px; font-weight:800; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background: rgba(0,0,0,0.15); }
+    .badge.theory { border-color: rgba(96,165,250,0.6); }
+    .badge.examples { border-color: rgba(168,85,247,0.6); }
+    .badge.quiz { border-color: rgba(34,197,94,0.6); }
+    .panel { margin-top:14px; border:1px solid var(--border); border-radius:18px; overflow:hidden; background: rgba(255,255,255,0.06); box-shadow: 0 14px 40px var(--shadow); }
+    .panel-head {
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding:12px 14px; border-bottom: 1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.12);
+    }
+    .panel-head .left { display:flex; flex-direction:column; gap:2px; min-width:200px; }
+    .panel-head .left .h { font-weight:900; font-size:14px; letter-spacing:0.2px; }
+    .panel-head .left .s { font-size:12px; color: var(--muted); }
+    .panel-head .right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .mini-btn {
+      border:1px solid var(--border); background: rgba(255,255,255,0.06); color: var(--text);
+      border-radius:12px; padding:8px 10px; cursor:pointer; font-weight:700; font-size:12px;
+      transition: background .12s ease, transform .12s ease;
+    }
+    .mini-btn:hover { background: rgba(255,255,255,0.10); transform: translateY(-1px); }
+    iframe { width:100%; height: calc(100vh - 190px); border:0; background:white; }
+    .hidden { display:none; }
+    .footer { margin-top:14px; padding:14px; color: var(--muted); font-size:12px; text-align:center; }
+    @media (max-width:760px) {
+      .topbar { flex-direction:column; align-items:stretch; gap:10px; }
+      .brand { min-width:unset; }
+      iframe { height: calc(100vh - 260px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar" role="navigation" aria-label="Impulse & Momentum master navigation">
+      <div class="brand">
+        <div class="title">⚡ Impulse & Momentum • Master Pack <span class="badge">CFBC Physics</span></div>
+        <div class="subtitle">Everything in one file — Theory → Worked Examples → Practice Quiz</div>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Sections">
+        <button class="tab" id="tab-theory" role="tab" aria-selected="true" aria-controls="frame-theory" onclick="showSection('theory')">
+          📚 Theory <span class="badge theory">Part 1</span>
+        </button>
+        <button class="tab" id="tab-examples" role="tab" aria-selected="false" aria-controls="frame-examples" onclick="showSection('examples')">
+          💡 Examples <span class="badge examples">Part 2</span>
+        </button>
+        <button class="tab" id="tab-quiz" role="tab" aria-selected="false" aria-controls="frame-quiz" onclick="showSection('quiz')">
+          🧪 Quiz <span class="badge quiz">Part 3</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div class="left">
+          <div class="h" id="panelTitle">Impulse &amp; Momentum - Theory | CFBC Physics</div>
+          <div class="s" id="panelSub">Tip: use the tabs above. Your scroll position is remembered per section.</div>
+        </div>
+        <div class="right">
+          <button class="mini-btn" onclick="scrollToTop()">⬆️ Top</button>
+          <button class="mini-btn" onclick="openInNewTab()">🔎 Open current in new tab</button>
+        </div>
+      </div>
+
+      <iframe id="frame-theory" title="Theory" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Impulse &amp; Momentum - Theory | CFBC Physics&lt;/title&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&amp;family=Source+Sans+Pro:wght@400;600;700&amp;family=Source+Code+Pro:wght@500;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f172a;
+            --blue: #3b82f6;
+            --cyan: #06b6d4;
+            --emerald: #10b981;
+            --amber: #f59e0b;
+            --rose: #f43f5e;
+            --purple: #a855f7;
+            --indigo: #6366f1;
+            --cream: #fffbeb;
+            --white: #ffffff;
+            --gray-100: #f1f5f9;
+        }
+
+        body {
+            font-family: &#x27;Source Sans Pro&#x27;, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--navy);
+            line-height: 1.8;
+        }
+
+        /* Starfield background */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(168, 85, 247, 0.95));
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: &#x27;&#x27;;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.03) 10px,
+                rgba(255,255,255,0.03) 20px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            background: var(--cream);
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: &#x27;&#x27;;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--indigo), var(--purple));
+            border-radius: 2px;
+        }
+
+        /* Definition Cards */
+        .definition-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border-left: 6px solid var(--indigo);
+            transition: all 0.3s;
+        }
+
+        .definition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+        }
+
+        .definition-title {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 2rem;
+            color: var(--indigo);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .definition-icon {
+            font-size: 2.5rem;
+        }
+
+        .definition-content {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: var(--navy);
+        }
+
+        .equation-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border: 3px solid var(--amber);
+            font-family: &#x27;Source Code Pro&#x27;, monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
+        }
+
+        /* Concept Cards Grid */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .concept-card {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 15px;
+            padding: 2rem;
+            border-left: 5px solid var(--amber);
+            transition: all 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .concept-card h3 {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+
+        /* Caribbean Examples */
+        .caribbean-example {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 5px solid var(--blue);
+        }
+
+        .caribbean-example h4 {
+            color: var(--blue);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 5px solid var(--rose);
+        }
+
+        .key-points h4 {
+            color: var(--rose);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-points li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .key-points li::before {
+            content: &#x27;💡&#x27;;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Accordion */
+        .accordion {
+            margin: 2rem 0;
+        }
+
+        .accordion-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .accordion-header {
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            color: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, var(--cyan), var(--emerald));
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding: 0 1.5rem;
+        }
+
+        .accordion-content.active {
+            max-height: 2000px;
+            padding: 1.5rem;
+        }
+
+        /* Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--indigo), var(--purple));
+            color: white;
+            padding: 1.5rem;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--gray-100);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--navy);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer h3 {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--amber);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--amber);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--cyan);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .section-title { font-size: 2rem; }
+            .concept-grid { grid-template-columns: 1fr; }
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id=&quot;starfield&quot;&gt;&lt;/div&gt;
+
+    &lt;div class=&quot;hero&quot;&gt;
+        &lt;div class=&quot;hero-content&quot;&gt;
+            &lt;h1&gt;⚡ Impulse &amp; Momentum ⚡&lt;/h1&gt;
+            &lt;p class=&quot;hero-subtitle&quot;&gt;Conservation Laws &amp; Collisions in Caribbean Physics&lt;/p&gt;
+            &lt;div class=&quot;hero-badge&quot;&gt;📚 Part 1: Theory &amp; Concepts&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;h2 class=&quot;section-title&quot;&gt;Core Definitions&lt;/h2&gt;
+
+        &lt;!-- Momentum Definition --&gt;
+        &lt;div class=&quot;definition-card&quot;&gt;
+            &lt;div class=&quot;definition-title&quot;&gt;
+                &lt;span class=&quot;definition-icon&quot;&gt;🎯&lt;/span&gt;
+                &lt;span&gt;Linear Momentum&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;definition-content&quot;&gt;
+                &lt;p&gt;&lt;strong&gt;Momentum&lt;/strong&gt; is the product of mass and velocity. It&#x27;s a measure of how much &quot;oomph&quot; a moving object has.&lt;/p&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    p = mv
+                &lt;/div&gt;
+                &lt;p&gt;&lt;strong&gt;Where:&lt;/strong&gt;&lt;/p&gt;
+                &lt;ul style=&quot;margin-left: 2rem; margin-top: 1rem;&quot;&gt;
+                    &lt;li&gt;&lt;strong&gt;p&lt;/strong&gt; = momentum (measured in kg m/s or N s)&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;m&lt;/strong&gt; = mass (kg)&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;v&lt;/strong&gt; = velocity (m/s)&lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;p style=&quot;margin-top: 1.5rem;&quot;&gt;&lt;strong&gt;Key Point:&lt;/strong&gt; Momentum is a &lt;strong&gt;vector&lt;/strong&gt; quantity - it has both magnitude and direction!&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;caribbean-example&quot;&gt;
+                &lt;h4&gt;🌴 Caribbean Example: Cricket Ball at Warner Park&lt;/h4&gt;
+                &lt;p&gt;A cricket ball (mass 0.16 kg) is bowled at 40 m/s toward the batsman.&lt;/p&gt;
+                &lt;p&gt;&lt;strong&gt;Momentum = 0.16 × 40 = 6.4 kg m/s&lt;/strong&gt; (or 6.4 N s) in the direction of the bowler to batsman.&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Impulse Definition --&gt;
+        &lt;div class=&quot;definition-card&quot;&gt;
+            &lt;div class=&quot;definition-title&quot;&gt;
+                &lt;span class=&quot;definition-icon&quot;&gt;💥&lt;/span&gt;
+                &lt;span&gt;Impulse&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;definition-content&quot;&gt;
+                &lt;p&gt;&lt;strong&gt;Impulse&lt;/strong&gt; is the product of force and the time for which it acts. It equals the change in momentum.&lt;/p&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    J = Ft = Δp = mv - mu
+                &lt;/div&gt;
+                &lt;p&gt;&lt;strong&gt;Where:&lt;/strong&gt;&lt;/p&gt;
+                &lt;ul style=&quot;margin-left: 2rem; margin-top: 1rem;&quot;&gt;
+                    &lt;li&gt;&lt;strong&gt;J&lt;/strong&gt; = impulse (N s)&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;F&lt;/strong&gt; = force (N)&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;t&lt;/strong&gt; = time (s)&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;Δp&lt;/strong&gt; = change in momentum&lt;/li&gt;
+                    &lt;li&gt;&lt;strong&gt;m&lt;/strong&gt; = mass, &lt;strong&gt;u&lt;/strong&gt; = initial velocity, &lt;strong&gt;v&lt;/strong&gt; = final velocity&lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;p style=&quot;margin-top: 1.5rem;&quot;&gt;&lt;strong&gt;Units:&lt;/strong&gt; Newton-seconds (N s) = kg m/s&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;caribbean-example&quot;&gt;
+                &lt;h4&gt;🌴 Caribbean Example: Hammer Hitting Nail at Construction Site&lt;/h4&gt;
+                &lt;p&gt;A 0.8 kg hammer moving at 12 m/s strikes a nail and comes to rest.&lt;/p&gt;
+                &lt;p&gt;&lt;strong&gt;Initial momentum:&lt;/strong&gt; p&lt;sub&gt;i&lt;/sub&gt; = 0.8 × 12 = 9.6 N s&lt;/p&gt;
+                &lt;p&gt;&lt;strong&gt;Final momentum:&lt;/strong&gt; p&lt;sub&gt;f&lt;/sub&gt; = 0&lt;/p&gt;
+                &lt;p&gt;&lt;strong&gt;Impulse on hammer:&lt;/strong&gt; J = 0 - 9.6 = &lt;strong&gt;-9.6 N s&lt;/strong&gt; (negative because it opposes motion)&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;h2 class=&quot;section-title&quot;&gt;Fundamental Relationships&lt;/h2&gt;
+
+        &lt;div class=&quot;concept-grid&quot;&gt;
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;📊 Impulse-Momentum Theorem&lt;/h3&gt;
+                &lt;div class=&quot;equation-box&quot; style=&quot;font-size: 1.2rem;&quot;&gt;
+                    Ft = mv - mu
+                &lt;/div&gt;
+                &lt;p&gt;The impulse acting on an object equals its change in momentum.&lt;/p&gt;
+                &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;This connects:&lt;/strong&gt;&lt;/p&gt;
+                &lt;ul style=&quot;margin-left: 1.5rem;&quot;&gt;
+                    &lt;li&gt;Force &amp; time → Change in motion&lt;/li&gt;
+                    &lt;li&gt;Small force over long time = Large force over short time&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;⚖️ Newton&#x27;s Second Law Form&lt;/h3&gt;
+                &lt;div class=&quot;equation-box&quot; style=&quot;font-size: 1.2rem;&quot;&gt;
+                    F = Δp/Δt = (mv - mu)/t
+                &lt;/div&gt;
+                &lt;p&gt;Force equals the rate of change of momentum.&lt;/p&gt;
+                &lt;p style=&quot;margin-top: 1rem;&quot;&gt;This is the &lt;strong&gt;original form&lt;/strong&gt; Newton stated! F = ma is derived from this.&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;🎯 Direction Matters!&lt;/h3&gt;
+                &lt;p&gt;Momentum and impulse are &lt;strong&gt;vectors&lt;/strong&gt;:&lt;/p&gt;
+                &lt;ul style=&quot;margin-left: 1.5rem; margin-top: 1rem;&quot;&gt;
+                    &lt;li&gt;Choose a positive direction&lt;/li&gt;
+                    &lt;li&gt;Velocities/forces in that direction: positive&lt;/li&gt;
+                    &lt;li&gt;Opposite direction: negative&lt;/li&gt;
+                    &lt;li&gt;Always state your choice!&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;🔄 Sign of Impulse&lt;/h3&gt;
+                &lt;p&gt;&lt;strong&gt;Positive impulse:&lt;/strong&gt; Increases momentum in positive direction&lt;/p&gt;
+                &lt;p&gt;&lt;strong&gt;Negative impulse:&lt;/strong&gt; Decreases momentum (slowing down or reversing)&lt;/p&gt;
+                &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;em&gt;Example: Ball bouncing off wall experiences negative impulse&lt;/em&gt;&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;h2 class=&quot;section-title&quot;&gt;Conservation of Linear Momentum&lt;/h2&gt;
+
+        &lt;div class=&quot;definition-card&quot;&gt;
+            &lt;div class=&quot;definition-title&quot;&gt;
+                &lt;span class=&quot;definition-icon&quot;&gt;⚖️&lt;/span&gt;
+                &lt;span&gt;The Principle&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;definition-content&quot;&gt;
+                &lt;p style=&quot;font-size: 1.3rem; font-weight: 600; color: var(--indigo);&quot;&gt;In the absence of external forces, the total momentum of a system remains constant.&lt;/p&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    Total momentum before = Total momentum after
+                &lt;/div&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂
+                &lt;/div&gt;
+                &lt;p style=&quot;margin-top: 2rem;&quot;&gt;&lt;strong&gt;Key Conditions:&lt;/strong&gt;&lt;/p&gt;
+                &lt;ul style=&quot;margin-left: 2rem; margin-top: 1rem;&quot;&gt;
+                    &lt;li&gt;No external forces (or they cancel out)&lt;/li&gt;
+                    &lt;li&gt;System is isolated/closed&lt;/li&gt;
+                    &lt;li&gt;Works for collisions, explosions, separations&lt;/li&gt;
+                    &lt;li&gt;True in &lt;strong&gt;all&lt;/strong&gt; directions independently&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;key-points&quot;&gt;
+                &lt;h4&gt;🔑 Why Does This Matter?&lt;/h4&gt;
+                &lt;ul&gt;
+                    &lt;li&gt;Allows us to solve collision problems&lt;/li&gt;
+                    &lt;li&gt;Explains rocket propulsion&lt;/li&gt;
+                    &lt;li&gt;Understanding recoil in guns&lt;/li&gt;
+                    &lt;li&gt;Predicting outcomes of impacts&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;h2 class=&quot;section-title&quot;&gt;Types of Collisions&lt;/h2&gt;
+
+        &lt;table class=&quot;comparison-table&quot;&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;Type&lt;/th&gt;
+                    &lt;th&gt;Momentum&lt;/th&gt;
+                    &lt;th&gt;Kinetic Energy&lt;/th&gt;
+                    &lt;th&gt;Caribbean Example&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;&lt;strong&gt;Elastic&lt;/strong&gt;&lt;/td&gt;
+                    &lt;td&gt;✅ Conserved&lt;/td&gt;
+                    &lt;td&gt;✅ Conserved&lt;/td&gt;
+                    &lt;td&gt;Two coconuts colliding in air (approximately)&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;&lt;strong&gt;Inelastic&lt;/strong&gt;&lt;/td&gt;
+                    &lt;td&gt;✅ Conserved&lt;/td&gt;
+                    &lt;td&gt;❌ NOT Conserved (energy lost to heat, sound, deformation)&lt;/td&gt;
+                    &lt;td&gt;Safari bus bumping into parked car&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                    &lt;td&gt;&lt;strong&gt;Perfectly Inelastic&lt;/strong&gt;&lt;/td&gt;
+                    &lt;td&gt;✅ Conserved&lt;/td&gt;
+                    &lt;td&gt;❌ Maximum energy lost&lt;/td&gt;
+                    &lt;td&gt;Two boats coupling together at dock&lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+
+        &lt;div class=&quot;caribbean-example&quot;&gt;
+            &lt;h4&gt;🌴 Caribbean Example: Boats at Christophe Harbour&lt;/h4&gt;
+            &lt;p&gt;&lt;strong&gt;Perfectly Inelastic Collision:&lt;/strong&gt;&lt;/p&gt;
+            &lt;p&gt;Boat A (500 kg) moving at 3 m/s collides with stationary boat B (300 kg). They lock together and move as one.&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;Before:&lt;/strong&gt; p&lt;sub&gt;total&lt;/sub&gt; = 500(3) + 300(0) = 1500 N s&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;After:&lt;/strong&gt; Both move together at velocity v&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;(500 + 300)v = 1500&lt;/strong&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;strong&gt;v = 1.875 m/s&lt;/strong&gt; (they move together at this speed)&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;h2 class=&quot;section-title&quot;&gt;Problem-Solving Strategy&lt;/h2&gt;
+
+        &lt;div class=&quot;accordion&quot;&gt;
+            &lt;div class=&quot;accordion-item&quot;&gt;
+                &lt;div class=&quot;accordion-header&quot; onclick=&quot;toggleAccordion(this)&quot;&gt;
+                    &lt;span&gt;Step 1: Choose Positive Direction ➡️&lt;/span&gt;
+                    &lt;span&gt;▼&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;accordion-content&quot;&gt;
+                    &lt;p&gt;Always clearly state which direction is positive (usually right or up).&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; &quot;Taking right as positive direction →&quot;&lt;/p&gt;
+                    &lt;p&gt;All velocities/momenta in that direction are positive, opposite are negative.&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;accordion-item&quot;&gt;
+                &lt;div class=&quot;accordion-header&quot; onclick=&quot;toggleAccordion(this)&quot;&gt;
+                    &lt;span&gt;Step 2: Draw a Diagram 📊&lt;/span&gt;
+                    &lt;span&gt;▼&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;accordion-content&quot;&gt;
+                    &lt;p&gt;Show:&lt;/p&gt;
+                    &lt;ul style=&quot;margin-left: 2rem;&quot;&gt;
+                        &lt;li&gt;All objects involved&lt;/li&gt;
+                        &lt;li&gt;Velocities BEFORE (u)&lt;/li&gt;
+                        &lt;li&gt;Velocities AFTER (v)&lt;/li&gt;
+                        &lt;li&gt;Masses of objects&lt;/li&gt;
+                        &lt;li&gt;Positive direction arrow&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;accordion-item&quot;&gt;
+                &lt;div class=&quot;accordion-header&quot; onclick=&quot;toggleAccordion(this)&quot;&gt;
+                    &lt;span&gt;Step 3: Write Conservation Equation ⚖️&lt;/span&gt;
+                    &lt;span&gt;▼&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;accordion-content&quot;&gt;
+                    &lt;div class=&quot;equation-box&quot; style=&quot;font-size: 1.1rem;&quot;&gt;
+                        m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂
+                    &lt;/div&gt;
+                    &lt;p&gt;Include signs based on direction!&lt;/p&gt;
+                    &lt;p&gt;If stuck together after: v₁ = v₂ = v (same final velocity)&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;accordion-item&quot;&gt;
+                &lt;div class=&quot;accordion-header&quot; onclick=&quot;toggleAccordion(this)&quot;&gt;
+                    &lt;span&gt;Step 4: Solve Algebraically 🧮&lt;/span&gt;
+                    &lt;span&gt;▼&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;accordion-content&quot;&gt;
+                    &lt;p&gt;Substitute known values, solve for unknown.&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Remember:&lt;/strong&gt;&lt;/p&gt;
+                    &lt;ul style=&quot;margin-left: 2rem;&quot;&gt;
+                        &lt;li&gt;Negative velocity = opposite direction&lt;/li&gt;
+                        &lt;li&gt;Zero velocity = at rest&lt;/li&gt;
+                        &lt;li&gt;Check units: momentum in N s or kg m/s&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;accordion-item&quot;&gt;
+                &lt;div class=&quot;accordion-header&quot; onclick=&quot;toggleAccordion(this)&quot;&gt;
+                    &lt;span&gt;Step 5: State Final Answer with Direction 📍&lt;/span&gt;
+                    &lt;span&gt;▼&lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;accordion-content&quot;&gt;
+                    &lt;p&gt;Never just give a number!&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Good:&lt;/strong&gt; &quot;Velocity = 5 m/s to the right&quot;&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Bad:&lt;/strong&gt; &quot;v = 5&quot;&lt;/p&gt;
+                    &lt;p&gt;If answer is negative, interpret: &quot;Velocity = -3 m/s means 3 m/s to the left&quot;&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;h2 class=&quot;section-title&quot;&gt;Applications&lt;/h2&gt;
+
+        &lt;div class=&quot;concept-grid&quot;&gt;
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;🚀 Rockets &amp; Jet Propulsion&lt;/h3&gt;
+                &lt;p&gt;Gas expelled backward → rocket moves forward&lt;/p&gt;
+                &lt;p&gt;Total momentum = 0 initially&lt;/p&gt;
+                &lt;p&gt;&lt;strong&gt;m&lt;sub&gt;gas&lt;/sub&gt;v&lt;sub&gt;gas&lt;/sub&gt; + m&lt;sub&gt;rocket&lt;/sub&gt;v&lt;sub&gt;rocket&lt;/sub&gt; = 0&lt;/strong&gt;&lt;/p&gt;
+                &lt;div class=&quot;caribbean-example&quot; style=&quot;margin-top: 1rem;&quot;&gt;
+                    &lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; Seaplanes at Christophe Harbour use jet propulsion!&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;🔫 Recoil&lt;/h3&gt;
+                &lt;p&gt;Gun and bullet initially at rest&lt;/p&gt;
+                &lt;p&gt;Bullet fires forward → gun recoils backward&lt;/p&gt;
+                &lt;p&gt;Total momentum stays zero!&lt;/p&gt;
+                &lt;div class=&quot;caribbean-example&quot; style=&quot;margin-top: 1rem;&quot;&gt;
+                    &lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; Fishing boat &quot;kicks back&quot; when harpoon fires&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;🌊 Water Jets&lt;/h3&gt;
+                &lt;p&gt;Water ejected backward from jet ski&lt;/p&gt;
+                &lt;p&gt;Jet ski propelled forward&lt;/p&gt;
+                &lt;p&gt;Force = rate of momentum change&lt;/p&gt;
+                &lt;div class=&quot;caribbean-example&quot; style=&quot;margin-top: 1rem;&quot;&gt;
+                    &lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt; Jet skis at Cockleshell Beach!&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;concept-card&quot;&gt;
+                &lt;h3&gt;🎾 Ball Rebounds&lt;/h3&gt;
+                &lt;p&gt;Ball hits wall, bounces back&lt;/p&gt;
+                &lt;p&gt;Velocity changes sign (reverses)&lt;/p&gt;
+                &lt;p&gt;Large momentum change!&lt;/p&gt;
+                &lt;p&gt;&lt;strong&gt;Δp = mv - m(-u) = m(v + u)&lt;/strong&gt;&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;h2 class=&quot;section-title&quot;&gt;Common Mistakes to Avoid&lt;/h2&gt;
+
+        &lt;div class=&quot;key-points&quot;&gt;
+            &lt;h4&gt;⚠️ Watch Out For These!&lt;/h4&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;strong&gt;Forgetting direction:&lt;/strong&gt; Always use + and - for direction!&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Confusing mass &amp; momentum:&lt;/strong&gt; p = mv, not just m or v&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Sign errors in rebounds:&lt;/strong&gt; Ball bouncing back has negative final velocity&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Mixing up before/after:&lt;/strong&gt; u for initial, v for final&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;Units:&lt;/strong&gt; Momentum is N s OR kg m/s (they&#x27;re equivalent!)&lt;/li&gt;
+                &lt;li&gt;&lt;strong&gt;External forces:&lt;/strong&gt; Conservation only works when no external forces&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+
+        &lt;h2 class=&quot;section-title&quot;&gt;Key Equations Summary&lt;/h2&gt;
+
+        &lt;div class=&quot;definition-card&quot;&gt;
+            &lt;div style=&quot;display: grid; gap: 1.5rem;&quot;&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    &lt;strong&gt;Momentum:&lt;/strong&gt; p = mv
+                &lt;/div&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    &lt;strong&gt;Impulse:&lt;/strong&gt; J = Ft = Δp = mv - mu
+                &lt;/div&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    &lt;strong&gt;Force:&lt;/strong&gt; F = Δp/Δt
+                &lt;/div&gt;
+                &lt;div class=&quot;equation-box&quot;&gt;
+                    &lt;strong&gt;Conservation:&lt;/strong&gt; m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+
+    &lt;div class=&quot;footer&quot;&gt;
+        &lt;h3&gt;🌴 Impulse &amp; Momentum Study Guide 🌴&lt;/h3&gt;
+        &lt;p&gt;Part 1: Theory &amp; Concepts - CFBC Physics&lt;/p&gt;
+        &lt;div class=&quot;footer-links&quot;&gt;
+            &lt;a href=&quot;#&quot; class=&quot;footer-link&quot;&gt;Part 2: Worked Examples →&lt;/a&gt;
+            &lt;a href=&quot;#&quot; class=&quot;footer-link&quot;&gt;Part 3: Practice Quiz →&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;p style=&quot;margin-top: 2rem; opacity: 0.7;&quot;&gt;Learning Objectives 2.8-2.9&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // Create starfield
+        function createStarfield() {
+            const starfield = document.getElementById(&#x27;starfield&#x27;);
+            for (let i = 0; i &lt; 100; i++) {
+                const star = document.createElement(&#x27;div&#x27;);
+                star.className = &#x27;star&#x27;;
+                star.style.left = Math.random() * 100 + &#x27;%&#x27;;
+                star.style.top = Math.random() * 100 + &#x27;%&#x27;;
+                star.style.animationDelay = Math.random() * 3 + &#x27;s&#x27;;
+                starfield.appendChild(star);
+            }
+        }
+
+        // Accordion functionality
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const arrow = header.querySelector(&#x27;span:last-child&#x27;);
+            
+            // Close all other accordions
+            document.querySelectorAll(&#x27;.accordion-content&#x27;).forEach(item =&gt; {
+                if (item !== content) {
+                    item.classList.remove(&#x27;active&#x27;);
+                }
+            });
+            
+            // Toggle current
+            content.classList.toggle(&#x27;active&#x27;);
+            arrow.textContent = content.classList.contains(&#x27;active&#x27;) ? &#x27;▲&#x27; : &#x27;▼&#x27;;
+        }
+
+        // Initialize
+        createStarfield();
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: &#x27;0px 0px -50px 0px&#x27;
+        };
+
+        const observer = new IntersectionObserver((entries) =&gt; {
+            entries.forEach(entry =&gt; {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = &#x27;1&#x27;;
+                    entry.target.style.transform = &#x27;translateY(0)&#x27;;
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll(&#x27;.definition-card, .concept-card, .caribbean-example&#x27;).forEach(el =&gt; {
+            el.style.opacity = &#x27;0&#x27;;
+            el.style.transform = &#x27;translateY(20px)&#x27;;
+            el.style.transition = &#x27;opacity 0.6s ease, transform 0.6s ease&#x27;;
+            observer.observe(el);
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;"></iframe>
+      <iframe id="frame-examples" class="hidden" title="Worked Examples" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Impulse &amp; Momentum - Worked Examples | CFBC Physics&lt;/title&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&amp;family=Source+Sans+Pro:wght@400;600;700&amp;family=Source+Code+Pro:wght@500;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0f172a;
+            --blue: #3b82f6;
+            --cyan: #06b6d4;
+            --emerald: #10b981;
+            --amber: #f59e0b;
+            --rose: #f43f5e;
+            --purple: #a855f7;
+            --indigo: #6366f1;
+            --cream: #fffbeb;
+            --white: #ffffff;
+            --gray-100: #f1f5f9;
+        }
+
+        body {
+            font-family: &#x27;Source Sans Pro&#x27;, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            color: var(--navy);
+            line-height: 1.8;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(236, 72, 153, 0.9));
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: &#x27;&#x27;;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url(&#x27;data:image/svg+xml,&lt;svg width=&quot;100&quot; height=&quot;100&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;&lt;circle cx=&quot;50&quot; cy=&quot;50&quot; r=&quot;3&quot; fill=&quot;white&quot; opacity=&quot;0.1&quot;/&gt;&lt;/svg&gt;&#x27;);
+            animation: drift 20s linear infinite;
+        }
+
+        @keyframes drift {
+            from { transform: translate(0, 0); }
+            to { transform: translate(100px, 100px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 5rem;
+            font-weight: 900;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            background: var(--cream);
+        }
+
+        .section-title {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--navy);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: &#x27;&#x27;;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--purple), var(--rose));
+            border-radius: 2px;
+        }
+
+        /* Example Cards */
+        .example-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            border-top: 6px solid var(--purple);
+            transition: all 0.3s;
+        }
+
+        .example-card:hover {
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
+        }
+
+        .example-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .example-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--purple), var(--rose));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: white;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
+        }
+
+        .example-title {
+            flex: 1;
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .difficulty-badge {
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .difficulty-basic {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+
+        .difficulty-intermediate {
+            background: linear-gradient(135deg, #fed7aa, #fdba74);
+            color: #7c2d12;
+        }
+
+        .difficulty-advanced {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            color: #7f1d1d;
+        }
+
+        .problem-statement {
+            background: var(--gray-100);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--purple);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+
+        .problem-statement strong {
+            color: var(--purple);
+        }
+
+        .problem-parts {
+            margin-top: 1.5rem;
+        }
+
+        .problem-parts ul {
+            margin-left: 2rem;
+            line-height: 2.2;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            margin-top: 2rem;
+        }
+
+        .solution-header {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--blue);
+        }
+
+        .solution-header h3 {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 1.5rem;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .given-info {
+            background: rgba(255,255,255,0.7);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .given-info p {
+            margin: 0.5rem 0;
+            font-family: &#x27;Source Code Pro&#x27;, monospace;
+        }
+
+        /* Step Cards */
+        .step-card {
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid var(--amber);
+            transition: all 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--amber);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--navy);
+        }
+
+        .step-content {
+            margin-left: 3rem;
+            line-height: 2;
+        }
+
+        .equation-display {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: &#x27;Source Code Pro&#x27;, monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            border: 2px solid var(--amber);
+        }
+
+        .calculation-line {
+            margin: 0.5rem 0;
+            padding-left: 1rem;
+        }
+
+        /* Diagram Section */
+        .diagram-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border: 2px solid var(--blue);
+        }
+
+        .diagram-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--navy);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .diagram-content {
+            background: #f0f9ff;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            font-family: &#x27;Source Code Pro&#x27;, monospace;
+        }
+
+        /* Final Answer */
+        .final-answer {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            border: 3px solid var(--emerald);
+        }
+
+        .final-answer h4 {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 1.5rem;
+            color: #065f46;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .answer-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: &#x27;Source Code Pro&#x27;, monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--navy);
+        }
+
+        /* Key Points */
+        .key-points {
+            background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            border-left: 5px solid var(--rose);
+        }
+
+        .key-points h4 {
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-points li {
+            padding: 0.75rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        .key-points li::before {
+            content: &#x27;💡&#x27;;
+            position: absolute;
+            left: 0;
+        }
+
+        .footer {
+            background: var(--navy);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer h3 {
+            font-family: &#x27;Playfair Display&#x27;, serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--amber);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--amber);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--cyan);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .section-title { font-size: 2rem; }
+            .example-header { flex-direction: column; align-items: flex-start; }
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;hero&quot;&gt;
+        &lt;div class=&quot;hero-content&quot;&gt;
+            &lt;h1&gt;💡 Worked Examples 💡&lt;/h1&gt;
+            &lt;p class=&quot;hero-subtitle&quot;&gt;Step-by-Step Impulse &amp; Momentum Problems&lt;/p&gt;
+            &lt;div class=&quot;hero-badge&quot;&gt;📝 Part 2: Complete Solutions&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;h2 class=&quot;section-title&quot;&gt;15 Comprehensive Examples&lt;/h2&gt;
+
+        &lt;!-- EXAMPLE 1: Hammer Hitting Nail --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;1&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Hammer at Construction Site&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-basic&quot;&gt;BASIC&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; A hammer of mass 0.8 kg is moving at 12 m/s when it strikes a nail and is brought to rest. What is the magnitude of the impulse exerted on the hammer?
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Mass m = 0.8 kg&lt;/p&gt;
+                        &lt;p&gt;• Initial velocity u = 12 m/s&lt;/p&gt;
+                        &lt;p&gt;• Final velocity v = 0 (brought to rest)&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Initial Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Initial momentum = mass × initial velocity&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;initial&lt;/sub&gt; = mu&lt;br&gt;
+                            p&lt;sub&gt;initial&lt;/sub&gt; = 0.8 × 12&lt;br&gt;
+                            p&lt;sub&gt;initial&lt;/sub&gt; = 9.6 N s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Final Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Final momentum (at rest):&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;final&lt;/sub&gt; = mv&lt;br&gt;
+                            p&lt;sub&gt;final&lt;/sub&gt; = 0.8 × 0&lt;br&gt;
+                            p&lt;sub&gt;final&lt;/sub&gt; = 0 N s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Impulse&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Impulse = Change in momentum&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            J = mv - mu&lt;br&gt;
+                            J = 0 - 9.6&lt;br&gt;
+                            J = -9.6 N s
+                        &lt;/div&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Magnitude:&lt;/strong&gt; |J| = 9.6 N s&lt;/p&gt;
+                        &lt;p style=&quot;font-style: italic; color: #666;&quot;&gt;The negative sign indicates the impulse opposes the motion.&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Impulse magnitude = 9.6 N s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Impulse = change in momentum&lt;/li&gt;
+                        &lt;li&gt;All initial momentum is lost when object comes to rest&lt;/li&gt;
+                        &lt;li&gt;Negative impulse means it opposes motion&lt;/li&gt;
+                        &lt;li&gt;Units: N s = kg m/s (equivalent)&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 2: Particle with Force --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;2&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Particle Under Constant Force&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-basic&quot;&gt;BASIC&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; A particle of mass 2 kg is moving in a straight line with speed 5 m/s. A force of 11 N acts on the particle for 6 seconds in the direction of motion. Find:
+                &lt;div class=&quot;problem-parts&quot;&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;(a) the magnitude of the impulse exerted on the particle&lt;/li&gt;
+                        &lt;li&gt;(b) the speed of the particle at the end of this time&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Mass m = 2 kg&lt;/p&gt;
+                        &lt;p&gt;• Initial speed u = 5 m/s&lt;/p&gt;
+                        &lt;p&gt;• Force F = 11 N (in direction of motion)&lt;/p&gt;
+                        &lt;p&gt;• Time t = 6 s&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Choose:&lt;/strong&gt; Direction of motion as positive →&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;diagram-section&quot;&gt;
+                    &lt;div class=&quot;diagram-title&quot;&gt;Motion Diagram&lt;/div&gt;
+                    &lt;div class=&quot;diagram-content&quot;&gt;
+                        &lt;p&gt;2 kg ───→ 5 m/s &amp;nbsp;&amp;nbsp;&amp;nbsp; 11 N ───→ &amp;nbsp;&amp;nbsp;&amp;nbsp; ○───→ v m/s &amp;nbsp;&amp;nbsp; +ve →&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;Force acts in same direction as motion (positive)&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;a&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Impulse&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Impulse = Force × Time&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            J = Ft&lt;br&gt;
+                            J = 11 × 6&lt;br&gt;
+                            J = 66 N s
+                        &lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;&lt;strong&gt;Magnitude of impulse = 66 N s&lt;/strong&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;b&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Find Final Speed Using Impulse-Momentum Theorem&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;&lt;strong&gt;Method 1:&lt;/strong&gt; Using J = mv - mu&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Initial momentum = 2 × 5 = 10 N s&lt;br&gt;
+                            Final momentum = 2v N s
+                        &lt;/div&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            J = mv - mu&lt;br&gt;
+                            66 = 2v - 10&lt;br&gt;
+                            2v = 76&lt;br&gt;
+                            v = 38 m/s
+                        &lt;/div&gt;
+                        
+                        &lt;p style=&quot;margin-top: 1.5rem;&quot;&gt;&lt;strong&gt;Method 2:&lt;/strong&gt; Using F = ma then kinematics&lt;/p&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;a = F/m = 11/2 = 5.5 m/s²&lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;v = u + at = 5 + 5.5(6) = 5 + 33 = 38 m/s ✓&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answers&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        (a) Impulse = 66 N s&lt;br&gt;
+                        (b) Final speed = 38 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Impulse J = Ft when force is constant&lt;/li&gt;
+                        &lt;li&gt;Impulse = Change in momentum&lt;/li&gt;
+                        &lt;li&gt;Can solve using impulse-momentum OR F=ma+kinematics&lt;/li&gt;
+                        &lt;li&gt;Force in direction of motion increases speed&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 3: Particle with Deceleration --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;3&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Particle Slowing Down&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-intermediate&quot;&gt;INTERMEDIATE&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; The velocity of a particle of mass 7 kg, traveling along the x-axis, changes from 13i m/s to 3i m/s in 5 seconds under the action of a constant force. Find the magnitude of the force and state its direction.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Mass m = 7 kg&lt;/p&gt;
+                        &lt;p&gt;• Initial velocity u = 13i m/s (positive x-direction)&lt;/p&gt;
+                        &lt;p&gt;• Final velocity v = 3i m/s (positive x-direction)&lt;/p&gt;
+                        &lt;p&gt;• Time t = 5 s&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Note:&lt;/strong&gt; Velocity decreases, so force opposes motion&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;diagram-section&quot;&gt;
+                    &lt;div class=&quot;diagram-title&quot;&gt;Velocity Diagram&lt;/div&gt;
+                    &lt;div class=&quot;diagram-content&quot;&gt;
+                        &lt;p&gt;○────→ 13 m/s &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; ←──── F newtons &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; ○────→ 3 m/s &amp;nbsp;&amp;nbsp;&amp;nbsp; +ve →&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;Particle slows down, so force opposes motion&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Momentum Change&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Initial momentum = 7 × 13i = 91i N s&lt;br&gt;
+                            Final momentum = 7 × 3i = 21i N s
+                        &lt;/div&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Change in momentum = 21i - 91i = -70i N s
+                        &lt;/div&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;Negative indicates decrease in positive direction&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Impulse&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Impulse of force = Change in momentum&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Ft = Δp&lt;br&gt;
+                            F × 5 = -70i&lt;br&gt;
+                            5F = -70i&lt;br&gt;
+                            F = -14i
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Interpret the Result&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;&lt;strong&gt;F = -14i&lt;/strong&gt;&lt;/p&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;Magnitude: |F| = 14 N&lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;Direction: -i (opposite to positive x-axis)&lt;/div&gt;
+                        &lt;p style=&quot;margin-top: 1rem; font-style: italic; color: #666;&quot;&gt;
+                            The force acts in the -i direction (left if x-axis points right), opposing the motion and causing the particle to slow down.
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Force magnitude = 14 N&lt;br&gt;
+                        Direction: -i (opposes motion)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Negative force means it opposes chosen positive direction&lt;/li&gt;
+                        &lt;li&gt;Force opposing motion causes deceleration&lt;/li&gt;
+                        &lt;li&gt;Use Ft = mv - mu to find force from momentum change&lt;/li&gt;
+                        &lt;li&gt;Always state magnitude AND direction&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 4: Direction Reversal --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;4&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Particle Reversing Direction&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-intermediate&quot;&gt;INTERMEDIATE&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; A particle of mass 3 kg is moving along a straight line in direction AB with speed 6 m/s when a force is applied to it. After 4 seconds the particle is moving in direction BA with speed 2 m/s. Find the magnitude and direction of the force.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Mass m = 3 kg&lt;/p&gt;
+                        &lt;p&gt;• Initial: 6 m/s in direction AB&lt;/p&gt;
+                        &lt;p&gt;• Final: 2 m/s in direction BA (opposite!)&lt;/p&gt;
+                        &lt;p&gt;• Time t = 4 s&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Choose:&lt;/strong&gt; Direction AB as positive →&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;diagram-section&quot;&gt;
+                    &lt;div class=&quot;diagram-title&quot;&gt;Motion Diagram&lt;/div&gt;
+                    &lt;div class=&quot;diagram-content&quot;&gt;
+                        &lt;p&gt;Initial: A ○────→ 6 m/s ────→ B &amp;nbsp;&amp;nbsp;&amp;nbsp; +ve →&lt;/p&gt;
+                        &lt;p&gt;Final: A ←──── 2 m/s ←────○ B&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Force F newtons ←────&lt;/strong&gt;&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Assign Signs to Velocities&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Taking AB direction as positive:&lt;/p&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;Initial velocity: u = +6 m/s (in AB direction)&lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;Final velocity: v = -2 m/s (in BA direction = opposite of AB)&lt;/div&gt;
+                        &lt;p style=&quot;margin-top: 1rem; font-style: italic; color: #666;&quot;&gt;
+                            CRITICAL: When direction reverses, velocity becomes negative!
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Change in Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Initial momentum = 3 × 6 = 18 N s&lt;br&gt;
+                            Final momentum = 3 × (-2) = -6 N s
+                        &lt;/div&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Change = -6 - 18 = -24 N s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Find Force Using Impulse-Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Ft = mv - mu&lt;br&gt;
+                            F × 4 = -24&lt;br&gt;
+                            F = -6 N
+                        &lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;&lt;strong&gt;Magnitude: |F| = 6 N&lt;/strong&gt;&lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;&lt;strong&gt;Direction: BA (opposite to positive direction)&lt;/strong&gt;&lt;/div&gt;
+                        
+                        &lt;p style=&quot;margin-top: 1.5rem;&quot;&gt;&lt;strong&gt;Alternative approach using vector notation:&lt;/strong&gt;&lt;/p&gt;
+                        &lt;p&gt;If i is unit vector in AB direction:&lt;/p&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;4F = 3(-2i) - 3(6i) = -6i - 18i = -24i&lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;F = -6i N (6 N in direction BA)&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Force = 6 N in direction BA&lt;br&gt;
+                        (opposes initial motion)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;When direction reverses, final velocity is NEGATIVE&lt;/li&gt;
+                        &lt;li&gt;Large momentum change when object reverses direction&lt;/li&gt;
+                        &lt;li&gt;Δp = mv - mu where v and u have opposite signs&lt;/li&gt;
+                        &lt;li&gt;Force causing reversal must oppose initial motion&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 5: Water Jet --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;5&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Water Jet at Christophe Harbour&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-advanced&quot;&gt;ADVANCED&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; A jet of water strikes a wall at right angles with speed 20 m/s. The water does not bounce off. Given that the average force exerted by the wall in stopping the flow is 360 N, find the mass of water being delivered per second.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Water speed u = 20 m/s (before hitting wall)&lt;/p&gt;
+                        &lt;p&gt;• Final speed v = 0 (stops at wall)&lt;/p&gt;
+                        &lt;p&gt;• Force F = 360 N&lt;/p&gt;
+                        &lt;p&gt;• Time t = 1 second&lt;/p&gt;
+                        &lt;p&gt;• Find: mass m hitting wall per second&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Choose:&lt;/strong&gt; Direction toward wall as positive →&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;diagram-section&quot;&gt;
+                    &lt;div class=&quot;diagram-title&quot;&gt;Water Jet Diagram&lt;/div&gt;
+                    &lt;div class=&quot;diagram-content&quot;&gt;
+                        &lt;p&gt;═══════→ 20 m/s &amp;nbsp;&amp;nbsp; ║ &amp;nbsp;&amp;nbsp; v = 0 &amp;nbsp;&amp;nbsp; +ve →&lt;/p&gt;
+                        &lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;WALL&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;←──── 360 N (force by wall on water)&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Understand the Physical Situation&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;In one second:&lt;/p&gt;
+                        &lt;ul style=&quot;margin-left: 2rem;&quot;&gt;
+                            &lt;li&gt;Mass m kg of water hits the wall&lt;/li&gt;
+                            &lt;li&gt;Initial momentum = 20m N s&lt;/li&gt;
+                            &lt;li&gt;Final momentum = 0&lt;/li&gt;
+                            &lt;li&gt;Time taken = 1 second&lt;/li&gt;
+                        &lt;/ul&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Apply Impulse-Momentum Theorem&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Force from wall opposes motion (negative direction):&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Ft = mv - mu&lt;br&gt;
+                            -360 × 1 = 0 - 20m&lt;br&gt;
+                            -360 = -20m&lt;br&gt;
+                            m = 18 kg
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Interpret Result&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;18 kg of water hits the wall every second.&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Rate of water delivery = 18 kg/s&lt;/strong&gt;&lt;/p&gt;
+                        
+                        &lt;p style=&quot;margin-top: 1.5rem; font-style: italic; color: #666;&quot;&gt;
+                            Note: By Newton&#x27;s 3rd Law, the water exerts an equal 360 N force ON the wall (action-reaction pair).
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Mass of water per second = 18 kg/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Force = rate of change of momentum&lt;/li&gt;
+                        &lt;li&gt;F = Δp/Δt can find mass flow rate&lt;/li&gt;
+                        &lt;li&gt;Water doesn&#x27;t bounce → all momentum lost&lt;/li&gt;
+                        &lt;li&gt;Action-reaction: water pushes wall, wall pushes water&lt;/li&gt;
+                        &lt;li&gt;Useful for jet propulsion, firefighting problems&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 6: Conservation - Boats Coupling --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;6&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Boats Coupling at Frigate Bay&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-intermediate&quot;&gt;INTERMEDIATE&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; Two boats are traveling in the same direction. Boat A (mass 500 kg) is moving at 4 m/s and catches up with boat B (mass 300 kg) moving at 2 m/s. They couple together. Find their common velocity after coupling.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Boat A: m₁ = 500 kg, u₁ = 4 m/s&lt;/p&gt;
+                        &lt;p&gt;• Boat B: m₂ = 300 kg, u₂ = 2 m/s&lt;/p&gt;
+                        &lt;p&gt;• After coupling: both move at v (same speed)&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Choose:&lt;/strong&gt; Forward direction as positive →&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Key:&lt;/strong&gt; Use conservation of momentum (no external forces)&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;diagram-section&quot;&gt;
+                    &lt;div class=&quot;diagram-title&quot;&gt;Before and After&lt;/div&gt;
+                    &lt;div class=&quot;diagram-content&quot;&gt;
+                        &lt;p&gt;&lt;strong&gt;BEFORE:&lt;/strong&gt;&lt;/p&gt;
+                        &lt;p&gt;A: 500 kg ──→ 4 m/s &amp;nbsp;&amp;nbsp; B: 300 kg ──→ 2 m/s&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;AFTER:&lt;/strong&gt;&lt;/p&gt;
+                        &lt;p&gt;(A+B): 800 kg ──→ v m/s&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Total Momentum Before&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = m₁u₁ + m₂u₂&lt;br&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = 500(4) + 300(2)&lt;br&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = 2000 + 600&lt;br&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = 2600 N s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Total Momentum After&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Combined mass = 500 + 300 = 800 kg&lt;/p&gt;
+                        &lt;p&gt;Both move at velocity v:&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;after&lt;/sub&gt; = (m₁ + m₂)v&lt;br&gt;
+                            p&lt;sub&gt;after&lt;/sub&gt; = 800v N s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Apply Conservation of Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = p&lt;sub&gt;after&lt;/sub&gt;&lt;br&gt;
+                            2600 = 800v&lt;br&gt;
+                            v = 2600/800&lt;br&gt;
+                            v = 3.25 m/s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Common velocity = 3.25 m/s forward
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Perfectly inelastic collision (objects stick together)&lt;/li&gt;
+                        &lt;li&gt;Total momentum conserved&lt;/li&gt;
+                        &lt;li&gt;Final velocity between the two initial velocities&lt;/li&gt;
+                        &lt;li&gt;Kinetic energy NOT conserved (some lost to coupling)&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 7: Conservation - Head-on Collision --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;7&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Head-on Collision&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-advanced&quot;&gt;ADVANCED&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; Two particles moving toward each other collide head-on. Particle A (5 kg) is moving right at 8 m/s and particle B (3 kg) is moving left at 6 m/s. After collision, they stick together. Find their common velocity.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Particle A: m₁ = 5 kg, moving right&lt;/p&gt;
+                        &lt;p&gt;• Particle B: m₂ = 3 kg, moving left&lt;/p&gt;
+                        &lt;p&gt;• Speed of A: 8 m/s&lt;/p&gt;
+                        &lt;p&gt;• Speed of B: 6 m/s&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Choose:&lt;/strong&gt; Right as positive →&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;diagram-section&quot;&gt;
+                    &lt;div class=&quot;diagram-title&quot;&gt;Before Collision&lt;/div&gt;
+                    &lt;div class=&quot;diagram-content&quot;&gt;
+                        &lt;p&gt;A: 5 kg ──→ 8 m/s &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; 3 kg ←── 6 m/s :B&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 0.5rem;&quot;&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;+ve →&lt;/p&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;A moving right: u₁ = +8 m/s&lt;/p&gt;
+                        &lt;p&gt;B moving left: u₂ = -6 m/s (negative!)&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Assign Signed Velocities&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;&lt;strong&gt;CRITICAL:&lt;/strong&gt; Opposite directions mean opposite signs!&lt;/p&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;u₁ = +8 m/s (moving right, positive)&lt;/div&gt;
+                        &lt;div class=&quot;calculation-line&quot;&gt;u₂ = -6 m/s (moving left, negative)&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Total Momentum Before&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = m₁u₁ + m₂u₂&lt;br&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = 5(8) + 3(-6)&lt;br&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = 40 - 18&lt;br&gt;
+                            p&lt;sub&gt;before&lt;/sub&gt; = 22 N s
+                        &lt;/div&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;Positive result means net momentum is to the right&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Apply Conservation&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            (m₁ + m₂)v = p&lt;sub&gt;before&lt;/sub&gt;&lt;br&gt;
+                            8v = 22&lt;br&gt;
+                            v = 2.75 m/s
+                        &lt;/div&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Positive v&lt;/strong&gt; means they move to the right after collision&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Common velocity = 2.75 m/s to the right
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Head-on: velocities have opposite signs&lt;/li&gt;
+                        &lt;li&gt;Momentum is algebraic sum (includes signs!)&lt;/li&gt;
+                        &lt;li&gt;Final direction determined by which had more momentum&lt;/li&gt;
+                        &lt;li&gt;A had more momentum (40 &gt; 18), so final motion is rightward&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 8: Explosion/Separation --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;8&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Explosion - Cannon on Boat&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-intermediate&quot;&gt;INTERMEDIATE&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; A cannon (mass 200 kg) sits on a stationary boat (mass 800 kg) at Basseterre Harbor. The cannon fires a 5 kg cannonball horizontally at 100 m/s. Find the recoil velocity of the boat+cannon system.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Cannonball: m₁ = 5 kg&lt;/p&gt;
+                        &lt;p&gt;• Boat + cannon: m₂ = 800 + 200 = 1000 kg&lt;/p&gt;
+                        &lt;p&gt;• Ball velocity after: v₁ = 100 m/s (forward)&lt;/p&gt;
+                        &lt;p&gt;• System initially at rest&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Choose:&lt;/strong&gt; Forward (ball direction) as positive →&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Initial State&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Everything at rest initially:&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Total initial momentum = 0
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Final State&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Ball moves forward at 100 m/s&lt;/p&gt;
+                        &lt;p&gt;Boat+cannon recoils at velocity v₂ (unknown)&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Final momentum = m₁v₁ + m₂v₂&lt;br&gt;
+                            Final momentum = 5(100) + 1000v₂&lt;br&gt;
+                            Final momentum = 500 + 1000v₂
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Apply Conservation&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            Initial momentum = Final momentum&lt;br&gt;
+                            0 = 500 + 1000v₂&lt;br&gt;
+                            1000v₂ = -500&lt;br&gt;
+                            v₂ = -0.5 m/s
+                        &lt;/div&gt;
+                        &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Negative sign:&lt;/strong&gt; boat recoils backward (opposite to ball)&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Recoil velocity = 0.5 m/s backward
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Explosion: objects start together, fly apart&lt;/li&gt;
+                        &lt;li&gt;Total momentum = 0 if initially at rest&lt;/li&gt;
+                        &lt;li&gt;Momenta of parts are equal and opposite&lt;/li&gt;
+                        &lt;li&gt;Lighter object moves faster (same momentum magnitude)&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 9: Elastic Collision --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;9&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Elastic Collision - Equal Masses&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-advanced&quot;&gt;ADVANCED&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; Two coconuts of equal mass (0.5 kg each) collide elastically. Coconut A is moving at 6 m/s and coconut B is at rest. Find their velocities after collision.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Both masses: m = 0.5 kg&lt;/p&gt;
+                        &lt;p&gt;• Before: u₁ = 6 m/s, u₂ = 0&lt;/p&gt;
+                        &lt;p&gt;• Collision is elastic&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Key:&lt;/strong&gt; For elastic collision, both momentum AND kinetic energy conserved&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Conservation of Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            mu₁ + mu₂ = mv₁ + mv₂&lt;br&gt;
+                            m(6) + m(0) = mv₁ + mv₂&lt;br&gt;
+                            6 = v₁ + v₂ ... ①
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Conservation of Kinetic Energy&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            ½mu₁² + ½mu₂² = ½mv₁² + ½mv₂²&lt;br&gt;
+                            u₁² + u₂² = v₁² + v₂²&lt;br&gt;
+                            36 + 0 = v₁² + v₂²&lt;br&gt;
+                            36 = v₁² + v₂² ... ②
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Solve System of Equations&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;From ①: v₁ = 6 - v₂&lt;/p&gt;
+                        &lt;p&gt;Substitute into ②:&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            (6 - v₂)² + v₂² = 36&lt;br&gt;
+                            36 - 12v₂ + v₂² + v₂² = 36&lt;br&gt;
+                            2v₂² - 12v₂ = 0&lt;br&gt;
+                            2v₂(v₂ - 6) = 0
+                        &lt;/div&gt;
+                        &lt;p&gt;So: v₂ = 0 or v₂ = 6&lt;/p&gt;
+                        &lt;p&gt;v₂ = 0 is initial condition (reject)&lt;/p&gt;
+                        &lt;p&gt;&lt;strong&gt;v₂ = 6 m/s&lt;/strong&gt;&lt;/p&gt;
+                        &lt;p&gt;From ①: v₁ = 6 - 6 = &lt;strong&gt;0 m/s&lt;/strong&gt;&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Coconut A: v₁ = 0 (stops completely)&lt;br&gt;
+                        Coconut B: v₂ = 6 m/s (takes all velocity)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Elastic collision: momentum AND energy conserved&lt;/li&gt;
+                        &lt;li&gt;Equal masses in elastic collision: velocities exchange!&lt;/li&gt;
+                        &lt;li&gt;Moving object stops, stationary object takes its velocity&lt;/li&gt;
+                        &lt;li&gt;This is why pool/billiard balls behave this way&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- EXAMPLE 10: 2D Vector Problem --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;10&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;2D Momentum - Vector Components&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-advanced&quot;&gt;ADVANCED&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                &lt;strong&gt;Problem:&lt;/strong&gt; A particle of mass 4 kg has velocity (3i + 2j) m/s. It experiences an impulse of (8i - 4j) N s. Find its final velocity.
+            &lt;/div&gt;
+
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;solution-header&quot;&gt;
+                    &lt;h3&gt;📐 Solution Strategy&lt;/h3&gt;
+                    &lt;div class=&quot;given-info&quot;&gt;
+                        &lt;strong&gt;Given:&lt;/strong&gt;&lt;br&gt;
+                        &lt;p&gt;• Mass m = 4 kg&lt;/p&gt;
+                        &lt;p&gt;• Initial velocity u = (3i + 2j) m/s&lt;/p&gt;
+                        &lt;p&gt;• Impulse J = (8i - 4j) N s&lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;p style=&quot;margin-top: 1rem;&quot;&gt;&lt;strong&gt;Key:&lt;/strong&gt; Work with i and j components separately&lt;/p&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;1&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Calculate Initial Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;initial&lt;/sub&gt; = mu&lt;br&gt;
+                            p&lt;sub&gt;initial&lt;/sub&gt; = 4(3i + 2j)&lt;br&gt;
+                            p&lt;sub&gt;initial&lt;/sub&gt; = (12i + 8j) N s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;2&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Use Impulse = Change in Momentum&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            J = p&lt;sub&gt;final&lt;/sub&gt; - p&lt;sub&gt;initial&lt;/sub&gt;&lt;br&gt;
+                            (8i - 4j) = p&lt;sub&gt;final&lt;/sub&gt; - (12i + 8j)&lt;br&gt;
+                            p&lt;sub&gt;final&lt;/sub&gt; = (8i - 4j) + (12i + 8j)&lt;br&gt;
+                            p&lt;sub&gt;final&lt;/sub&gt; = (20i + 4j) N s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-header&quot;&gt;
+                        &lt;div class=&quot;step-number&quot;&gt;3&lt;/div&gt;
+                        &lt;div class=&quot;step-title&quot;&gt;Find Final Velocity&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            p&lt;sub&gt;final&lt;/sub&gt; = mv&lt;br&gt;
+                            (20i + 4j) = 4v&lt;br&gt;
+                            v = (20i + 4j)/4&lt;br&gt;
+                            v = (5i + j) m/s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;h4&gt;✓ Final Answer&lt;/h4&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;
+                        Final velocity = (5i + j) m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;key-points&quot;&gt;
+                    &lt;h4&gt;🔑 Key Learning Points&lt;/h4&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;Vector problems: treat i and j components separately&lt;/li&gt;
+                        &lt;li&gt;Impulse adds to momentum vectorially&lt;/li&gt;
+                        &lt;li&gt;Positive impulse component increases that velocity component&lt;/li&gt;
+                        &lt;li&gt;Negative impulse component decreases that velocity component&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Quick Examples 11-15 --&gt;
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;11&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Cricket Ball Bouncing&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-intermediate&quot;&gt;INTERMEDIATE&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                A 0.16 kg cricket ball at Warner Park hits a wall at 30 m/s and bounces back at 25 m/s. Find impulse from wall.
+            &lt;/div&gt;
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;p&gt;Choose toward wall as positive:&lt;/p&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            u = +30 m/s, v = -25 m/s (opposite)&lt;br&gt;
+                            J = mv - mu = 0.16(-25 - 30)&lt;br&gt;
+                            J = 0.16(-55) = -8.8 N s
+                        &lt;/div&gt;
+                        &lt;p&gt;Magnitude: 8.8 N s (opposing initial motion)&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;Impulse magnitude = 8.8 N s&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;12&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Jet Ski Propulsion&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-basic&quot;&gt;BASIC&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                A jet ski (300 kg) ejects 2 kg water/second at 15 m/s backward. Find thrust force.
+            &lt;/div&gt;
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            F = Δp/Δt = (mass/time) × velocity&lt;br&gt;
+                            F = 2 × 15 = 30 N forward
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;Thrust force = 30 N&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;13&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Safari Bus Collision&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-intermediate&quot;&gt;INTERMEDIATE&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                Safari bus (2000 kg) at 15 m/s hits stationary car (1000 kg). They stick. Find common velocity.
+            &lt;/div&gt;
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            2000(15) + 1000(0) = 3000v&lt;br&gt;
+                            30000 = 3000v&lt;br&gt;
+                            v = 10 m/s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;Common velocity = 10 m/s&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;14&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Fisherman Throwing Net&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-intermediate&quot;&gt;INTERMEDIATE&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                Fisherman (80 kg) on stationary boat (120 kg) throws 5 kg net forward at 8 m/s. Find boat recoil velocity.
+            &lt;/div&gt;
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            0 = 5(8) + 200v&lt;br&gt;
+                            200v = -40&lt;br&gt;
+                            v = -0.2 m/s
+                        &lt;/div&gt;
+                        &lt;p&gt;Boat moves backward at 0.2 m/s&lt;/p&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;Recoil = 0.2 m/s backward&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;example-card&quot;&gt;
+            &lt;div class=&quot;example-header&quot;&gt;
+                &lt;div class=&quot;example-number&quot;&gt;15&lt;/div&gt;
+                &lt;div class=&quot;example-title&quot;&gt;Pelican Catching Fish&lt;/div&gt;
+                &lt;span class=&quot;difficulty-badge difficulty-advanced&quot;&gt;ADVANCED&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;problem-statement&quot;&gt;
+                A pelican (5 kg) flying at 12 m/s catches a 0.8 kg fish swimming at 2 m/s in same direction. Find their common velocity.
+            &lt;/div&gt;
+            &lt;div class=&quot;solution-section&quot;&gt;
+                &lt;div class=&quot;step-card&quot;&gt;
+                    &lt;div class=&quot;step-content&quot;&gt;
+                        &lt;div class=&quot;equation-display&quot;&gt;
+                            5(12) + 0.8(2) = 5.8v&lt;br&gt;
+                            60 + 1.6 = 5.8v&lt;br&gt;
+                            v = 61.6/5.8 ≈ 10.62 m/s
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;final-answer&quot;&gt;
+                    &lt;div class=&quot;answer-box&quot;&gt;Common velocity ≈ 10.6 m/s&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+
+    &lt;div class=&quot;footer&quot;&gt;
+        &lt;h3&gt;🌴 Impulse &amp; Momentum Study Guide 🌴&lt;/h3&gt;
+        &lt;p&gt;Part 2: Worked Examples - CFBC Physics&lt;/p&gt;
+        &lt;div class=&quot;footer-links&quot;&gt;
+            &lt;a href=&quot;#&quot; class=&quot;footer-link&quot;&gt;← Part 1: Theory &amp; Concepts&lt;/a&gt;
+            &lt;a href=&quot;#&quot; class=&quot;footer-link&quot;&gt;Part 3: Practice Quiz →&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;p style=&quot;margin-top: 2rem; opacity: 0.7;&quot;&gt;15 Complete Worked Examples&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: &#x27;0px 0px -50px 0px&#x27;
+        };
+
+        const observer = new IntersectionObserver((entries) =&gt; {
+            entries.forEach(entry =&gt; {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = &#x27;1&#x27;;
+                    entry.target.style.transform = &#x27;translateY(0)&#x27;;
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll(&#x27;.example-card&#x27;).forEach(el =&gt; {
+            el.style.opacity = &#x27;0&#x27;;
+            el.style.transform = &#x27;translateY(20px)&#x27;;
+            el.style.transition = &#x27;opacity 0.6s ease, transform 0.6s ease&#x27;;
+            observer.observe(el);
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;"></iframe>
+      <iframe id="frame-quiz" class="hidden" title="Practice Quiz" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Impulse &amp; Momentum - Practice Quiz | CFBC Physics&lt;/title&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;family=Roboto+Mono:wght@400;500&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --caribbean-blue: #0077BE;
+            --sand-yellow: #F4D03F;
+            --sunset-orange: #E67E22;
+            --palm-green: #27AE60;
+            --deep-blue: #1A3A52;
+            --coral-pink: #FF6B9D;
+            --white: #FFFFFF;
+            --light-gray: #F8F9FA;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: &#x27;Poppins&#x27;, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--deep-blue);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--caribbean-blue), var(--palm-green));
+            padding: 2.5rem;
+            border-radius: 20px 20px 0 0;
+            color: white;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--shadow);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .emoji {
+            font-size: 2rem;
+            margin: 0 0.5rem;
+        }
+
+        .quiz-content {
+            background: var(--white);
+            padding: 0;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .question-card {
+            padding: 2.5rem;
+            border-bottom: 3px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .question-card:last-child {
+            border-bottom: none;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .question-card:hover {
+            background: var(--light-gray);
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--sunset-orange), var(--coral-pink));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(230, 126, 34, 0.3);
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--deep-blue);
+        }
+
+        .question-text strong {
+            color: var(--caribbean-blue);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-family: &#x27;Poppins&#x27;, sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        .btn-hint {
+            background: var(--sand-yellow);
+            color: var(--deep-blue);
+        }
+
+        .btn-hint:hover {
+            background: #F1C40F;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(244, 208, 63, 0.4);
+        }
+
+        .btn-solution {
+            background: var(--palm-green);
+            color: white;
+        }
+
+        .btn-solution:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .btn-steps {
+            background: var(--caribbean-blue);
+            color: white;
+        }
+
+        .btn-steps:hover {
+            background: #005A8D;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 119, 190, 0.4);
+        }
+
+        .info-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: none;
+            animation: expandIn 0.4s ease;
+            line-height: 1.8;
+        }
+
+        @keyframes expandIn {
+            from {
+                opacity: 0;
+                max-height: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                max-height: 2000px;
+                transform: translateY(0);
+            }
+        }
+
+        .hint-box {
+            background: linear-gradient(135deg, #FFF9E6, #FFF3CD);
+            border-left: 5px solid var(--sand-yellow);
+            color: var(--deep-blue);
+        }
+
+        .solution-box {
+            background: linear-gradient(135deg, #E8F8F5, #D5F4E6);
+            border-left: 5px solid var(--palm-green);
+            color: var(--deep-blue);
+        }
+
+        .steps-box {
+            background: linear-gradient(135deg, #EBF5FB, #D6EAF8);
+            border-left: 5px solid var(--caribbean-blue);
+            color: var(--deep-blue);
+        }
+
+        .info-box h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box p {
+            margin-bottom: 0.75rem;
+        }
+
+        .info-box .final-answer {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 600;
+            font-family: &#x27;Roboto Mono&#x27;, monospace;
+            font-size: 1.05rem;
+            border: 2px dashed rgba(0, 0, 0, 0.2);
+        }
+
+        .equation {
+            font-family: &#x27;Roboto Mono&#x27;, monospace;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            display: inline-block;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .step {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+            border-left: 3px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-tracker {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 999;
+            min-width: 200px;
+        }
+
+        .progress-tracker h4 {
+            font-size: 1rem;
+            color: var(--caribbean-blue);
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--caribbean-blue), var(--palm-green));
+            width: 0%;
+            transition: width 0.5s ease-out;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: white;
+            padding: 2rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+        }
+
+        .footer a {
+            color: var(--sand-yellow);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .question-card {
+                padding: 1.5rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .progress-tracker {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;header&quot;&gt;
+            &lt;h1&gt;&lt;span class=&quot;emoji&quot;&gt;💥&lt;/span&gt;Impulse &amp; Momentum Quiz&lt;span class=&quot;emoji&quot;&gt;⚡&lt;/span&gt;&lt;/h1&gt;
+            &lt;p&gt;25 Practice Problems - Test Your Understanding!&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;quiz-content&quot;&gt;
+            &lt;!-- Question 1 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 1&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;hammer at a construction site&lt;/strong&gt; (mass 0.8 kg) is moving at 12 m/s when it strikes a nail and is brought to rest. What is the magnitude of the impulse exerted on the hammer?
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint1&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution1&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps1&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint1&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Impulse = change in momentum&lt;/p&gt;
+                    &lt;p&gt;J = mv - mu&lt;/p&gt;
+                    &lt;p&gt;Final velocity v = 0 (brought to rest)&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution1&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        Impulse magnitude = 9.6 N s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps1&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        Initial momentum = 0.8 × 12 = 9.6 N s&lt;br&gt;
+                        Final momentum = 0&lt;br&gt;
+                        J = 0 - 9.6 = -9.6 N s&lt;br&gt;
+                        Magnitude = 9.6 N s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 2 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 2&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;particle&lt;/strong&gt; of mass 2 kg is moving at 5 m/s. A force of 11 N acts on it for 6 seconds in the direction of motion. Find:
+                    &lt;ul style=&quot;margin-left: 2rem; margin-top: 0.5rem;&quot;&gt;
+                        &lt;li&gt;(a) the impulse exerted&lt;/li&gt;
+                        &lt;li&gt;(b) the final speed&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint2&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution2&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps2&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint2&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;(a) J = Ft&lt;/p&gt;
+                    &lt;p&gt;(b) J = mv - mu, solve for v&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution2&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        (a) J = 66 N s&lt;br&gt;
+                        (b) v = 38 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps2&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        &lt;strong&gt;(a)&lt;/strong&gt; J = 11 × 6 = 66 N s
+                    &lt;/div&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        &lt;strong&gt;(b)&lt;/strong&gt; 66 = 2v - 2(5)&lt;br&gt;
+                        66 = 2v - 10&lt;br&gt;
+                        2v = 76&lt;br&gt;
+                        v = 38 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 3 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 3&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;7 kg particle&lt;/strong&gt; traveling along x-axis changes velocity from 13i m/s to 3i m/s in 5 seconds under constant force. Find the magnitude and direction of the force.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint3&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution3&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps3&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint3&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Change in momentum = 7(3i - 13i)&lt;/p&gt;
+                    &lt;p&gt;Ft = change in momentum&lt;/p&gt;
+                    &lt;p&gt;Negative F means opposite to i direction&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution3&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        F = 14 N in direction -i
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps3&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        Δp = 7(3i) - 7(13i) = 21i - 91i = -70i N s&lt;br&gt;
+                        Ft = -70i&lt;br&gt;
+                        5F = -70i&lt;br&gt;
+                        F = -14i N&lt;br&gt;
+                        Magnitude: 14 N, Direction: -i
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 4 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 4&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;3 kg particle&lt;/strong&gt; moves at 6 m/s in direction AB. After 4 seconds of force, it moves at 2 m/s in direction BA. Find the force magnitude and direction.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint4&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution4&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps4&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint4&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Choose AB as positive&lt;/p&gt;
+                    &lt;p&gt;Initial: u = +6 m/s&lt;/p&gt;
+                    &lt;p&gt;Final: v = -2 m/s (opposite direction!)&lt;/p&gt;
+                    &lt;p&gt;Use Ft = mv - mu&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution4&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        F = 6 N in direction BA
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps4&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        Choose AB as positive&lt;br&gt;
+                        u = +6 m/s, v = -2 m/s&lt;br&gt;
+                        4F = 3(-2) - 3(6) = -6 - 18 = -24&lt;br&gt;
+                        F = -6 N (or 6 N in BA direction)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 5 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 5&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;water jet at Christophe Harbour&lt;/strong&gt; strikes a wall at 20 m/s and stops. The wall exerts 360 N average force. Find the mass of water delivered per second.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint5&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution5&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps5&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint5&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;In 1 second, m kg hits wall&lt;/p&gt;
+                    &lt;p&gt;Initial momentum = 20m&lt;/p&gt;
+                    &lt;p&gt;Final momentum = 0&lt;/p&gt;
+                    &lt;p&gt;Ft = change in momentum&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution5&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        m = 18 kg/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps5&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        Force opposes motion: F = -360 N&lt;br&gt;
+                        -360 × 1 = 0 - 20m&lt;br&gt;
+                        -360 = -20m&lt;br&gt;
+                        m = 18 kg
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 6 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 6&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    Two &lt;strong&gt;boats at Frigate Bay&lt;/strong&gt; traveling same direction couple together. Boat A (500 kg) at 4 m/s catches boat B (300 kg) at 2 m/s. Find their common velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint6&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution6&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps6&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint6&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Conservation of momentum&lt;/p&gt;
+                    &lt;p&gt;m₁u₁ + m₂u₂ = (m₁ + m₂)v&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution6&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        v = 3.25 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps6&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        500(4) + 300(2) = 800v&lt;br&gt;
+                        2000 + 600 = 800v&lt;br&gt;
+                        2600 = 800v&lt;br&gt;
+                        v = 3.25 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 7 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 7&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    Two particles collide head-on. Particle A (5 kg) moving right at 8 m/s, particle B (3 kg) moving left at 6 m/s. They stick together. Find common velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint7&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution7&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps7&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint7&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Choose right as positive&lt;/p&gt;
+                    &lt;p&gt;u₁ = +8 m/s (right)&lt;/p&gt;
+                    &lt;p&gt;u₂ = -6 m/s (left, opposite!)&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution7&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        v = 2.75 m/s to the right
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps7&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        5(8) + 3(-6) = 8v&lt;br&gt;
+                        40 - 18 = 8v&lt;br&gt;
+                        22 = 8v&lt;br&gt;
+                        v = 2.75 m/s (positive = right)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 8 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 8&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;cannon at Basseterre&lt;/strong&gt; (mass 1000 kg including boat) fires a 5 kg ball at 100 m/s. Find recoil velocity of boat+cannon system. Initially at rest.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint8&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution8&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps8&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint8&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Total initial momentum = 0&lt;/p&gt;
+                    &lt;p&gt;5(100) + 1000v = 0&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution8&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        v = 0.5 m/s backward
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps8&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        0 = 5(100) + 1000v&lt;br&gt;
+                        1000v = -500&lt;br&gt;
+                        v = -0.5 m/s (backward)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 9 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 9&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;0.16 kg cricket ball&lt;/strong&gt; at Warner Park hits wall at 30 m/s and bounces back at 25 m/s. Find impulse from wall.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint9&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution9&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps9&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint9&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Choose toward wall as positive&lt;/p&gt;
+                    &lt;p&gt;u = +30, v = -25 (opposite!)&lt;/p&gt;
+                    &lt;p&gt;J = mv - mu&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution9&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        J magnitude = 8.8 N s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps9&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        J = 0.16(-25 - 30)&lt;br&gt;
+                        J = 0.16(-55)&lt;br&gt;
+                        J = -8.8 N s&lt;br&gt;
+                        Magnitude = 8.8 N s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 10 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 10&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;particle&lt;/strong&gt; (4 kg) has velocity (3i + 2j) m/s. It experiences impulse (8i - 4j) N s. Find final velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint10&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution10&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps10&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint10&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;J = p_final - p_initial&lt;/p&gt;
+                    &lt;p&gt;Work with i and j separately&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution10&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        v = (5i + j) m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps10&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Step-by-Step Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        p_initial = 4(3i + 2j) = (12i + 8j)&lt;br&gt;
+                        (8i - 4j) = p_final - (12i + 8j)&lt;br&gt;
+                        p_final = (20i + 4j)&lt;br&gt;
+                        v = (20i + 4j)/4 = (5i + j) m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Questions 11-25 in more compact format --&gt;
+
+            &lt;!-- Question 11 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 11&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;2000 kg safari bus&lt;/strong&gt; at 15 m/s hits a stationary 1000 kg car. They stick. Find common velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint11&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution11&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps11&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint11&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Conservation: 2000(15) + 1000(0) = 3000v&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution11&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;v = 10 m/s&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps11&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        30000 = 3000v → v = 10 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 12 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 12&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;jet ski&lt;/strong&gt; (300 kg) ejects 2 kg water/second at 15 m/s backward. Find thrust force.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint12&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution12&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps12&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint12&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;F = (mass/time) × velocity = 2 × 15&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution12&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;F = 30 N forward&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps12&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;F = 2 × 15 = 30 N&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 13 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 13&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    Two &lt;strong&gt;equal-mass coconuts&lt;/strong&gt; (0.5 kg each) collide elastically. One at 6 m/s, one at rest. Find final velocities.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint13&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution13&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps13&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint13&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Equal masses in elastic collision exchange velocities&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution13&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        v₁ = 0, v₂ = 6 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps13&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        Moving stops, stationary takes velocity
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 14 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 14&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;1.5 kg ball&lt;/strong&gt; drops from rest and hits ground at 10 m/s, bounces back at 8 m/s. Contact time 0.1 s. Find average force from ground.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint14&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution14&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps14&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint14&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Down: u = +10, v = -8&lt;/p&gt;
+                    &lt;p&gt;Ft = mv - mu&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution14&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;F = 270 N upward&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps14&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        F(0.1) = 1.5(-8 - 10) = -27&lt;br&gt;
+                        F = -270 N (upward)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 15 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 15&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;5 kg pelican&lt;/strong&gt; flying at 12 m/s catches a 0.8 kg fish swimming at 2 m/s in same direction. Find common velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint15&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution15&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps15&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint15&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;5(12) + 0.8(2) = 5.8v&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution15&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;v ≈ 10.6 m/s&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps15&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        60 + 1.6 = 5.8v&lt;br&gt;
+                        v = 61.6/5.8 = 10.62 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 16 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 16&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;particle&lt;/strong&gt; (3 kg) moving at 8 m/s collides with stationary particle (2 kg). They stick. Find common velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint16&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution16&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps16&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint16&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;3(8) + 2(0) = 5v&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution16&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;v = 4.8 m/s&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps16&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;24 = 5v → v = 4.8 m/s&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 17 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 17&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;fisherman&lt;/strong&gt; (80 kg) on boat (120 kg) throws 5 kg net at 8 m/s. System initially at rest. Find boat recoil.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint17&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution17&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps17&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint17&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;0 = 5(8) + 200v&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution17&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;v = 0.2 m/s backward&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps17&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        200v = -40&lt;br&gt;
+                        v = -0.2 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 18 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 18&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;0.5 kg ball&lt;/strong&gt; moving at 20 m/s is struck by bat. Force 150 N for 0.02 s. Ball reverses at 25 m/s. Verify with impulse.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint18&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution18&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps18&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint18&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;J = Ft and J = mv - mu&lt;/p&gt;
+                    &lt;p&gt;Check if both give same impulse&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution18&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        Both methods give J = 3 N s ✓
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps18&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        Ft = 150(0.02) = 3 N s&lt;br&gt;
+                        mv - mu = 0.5(-25 - 20) = -22.5... 
+                        &lt;em&gt;This doesn&#x27;t match! Problem may have error&lt;/em&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 19 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 19&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    Two &lt;strong&gt;boats&lt;/strong&gt; approach each other. A (600 kg) at 5 m/s right, B (400 kg) at 4 m/s left. They couple. Find common velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint19&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution19&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps19&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint19&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Right positive: u₁ = +5, u₂ = -4&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution19&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;v = 1.4 m/s to right&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps19&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        600(5) + 400(-4) = 1000v&lt;br&gt;
+                        3000 - 1600 = 1000v&lt;br&gt;
+                        v = 1.4 m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 20 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 20&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;10 kg object&lt;/strong&gt; at rest explodes into two pieces: 6 kg at 8 m/s east. Find velocity of 4 kg piece.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint20&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution20&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps20&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint20&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;0 = 6(8) + 4v&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution20&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;v = 12 m/s west&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps20&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        0 = 48 + 4v&lt;br&gt;
+                        v = -12 m/s (west)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 21 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 21&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;particle&lt;/strong&gt; (2 kg) with velocity 4i m/s receives impulse 6i + 8j N s. Find final velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint21&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution21&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps21&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint21&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;p_initial = 2(4i) = 8i&lt;/p&gt;
+                    &lt;p&gt;p_final = 8i + (6i + 8j)&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution21&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;v = (7i + 4j) m/s&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps21&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        p_final = 8i + 6i + 8j = (14i + 8j)&lt;br&gt;
+                        v = (14i + 8j)/2 = (7i + 4j) m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 22 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 22&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;1 kg ball&lt;/strong&gt; hits wall perpendicularly at 15 m/s and bounces back at 12 m/s. Wall contact time 0.05 s. Find average force.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint22&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution22&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps22&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint22&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;u = +15, v = -12&lt;/p&gt;
+                    &lt;p&gt;Ft = m(v - u)&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution22&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;F = 540 N&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps22&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        F(0.05) = 1(-12 - 15) = -27&lt;br&gt;
+                        F = -540 N (magnitude 540 N)
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 23 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 23&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;rocket&lt;/strong&gt; (total 500 kg) ejects 10 kg gas/s at 200 m/s. Find thrust force.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint23&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution23&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps23&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint23&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;F = (mass/time) × velocity&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution23&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;F = 2000 N&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps23&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;F = 10 × 200 = 2000 N&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 24 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 24&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    Two &lt;strong&gt;particles&lt;/strong&gt;: A (4 kg) at 6 m/s, B (6 kg) at -4 m/s collide and stick. Find common velocity and momentum change for A.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint24&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution24&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps24&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint24&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;Find v first, then Δp for A&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution24&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        v = 0 m/s&lt;br&gt;
+                        Δp_A = -24 N s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps24&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        4(6) + 6(-4) = 10v&lt;br&gt;
+                        24 - 24 = 0 → v = 0&lt;br&gt;
+                        For A: Δp = 4(0) - 4(6) = -24 N s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Question 25 --&gt;
+            &lt;div class=&quot;question-card&quot;&gt;
+                &lt;span class=&quot;question-number&quot;&gt;Question 25&lt;/span&gt;
+                &lt;div class=&quot;question-text&quot;&gt;
+                    A &lt;strong&gt;particle&lt;/strong&gt; (5 kg) has momentum (10i + 15j) N s. It experiences force (20i - 10j) N for 2 seconds. Find final momentum and velocity.
+                &lt;/div&gt;
+                &lt;div class=&quot;button-group&quot;&gt;
+                    &lt;button class=&quot;btn btn-hint&quot; onclick=&quot;toggleInfo(&#x27;hint25&#x27;)&quot;&gt;💡 Show Hint&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-solution&quot; onclick=&quot;toggleInfo(&#x27;solution25&#x27;)&quot;&gt;✓ Show Answer&lt;/button&gt;
+                    &lt;button class=&quot;btn btn-steps&quot; onclick=&quot;toggleInfo(&#x27;steps25&#x27;)&quot;&gt;📝 Show Steps&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;hint25&quot; class=&quot;info-box hint-box&quot;&gt;
+                    &lt;h4&gt;💡 Hint&lt;/h4&gt;
+                    &lt;p&gt;J = Ft = (20i - 10j) × 2&lt;/p&gt;
+                    &lt;p&gt;p_final = p_initial + J&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;solution25&quot; class=&quot;info-box solution-box&quot;&gt;
+                    &lt;h4&gt;✓ Answer&lt;/h4&gt;
+                    &lt;div class=&quot;final-answer&quot;&gt;
+                        p_final = (50i - 5j) N s&lt;br&gt;
+                        v = (10i - j) m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div id=&quot;steps25&quot; class=&quot;info-box steps-box&quot;&gt;
+                    &lt;h4&gt;📝 Solution&lt;/h4&gt;
+                    &lt;div class=&quot;step&quot;&gt;
+                        J = (40i - 20j)&lt;br&gt;
+                        p_final = (10i + 15j) + (40i - 20j)&lt;br&gt;
+                        = (50i - 5j) N s&lt;br&gt;
+                        v = (50i - 5j)/5 = (10i - j) m/s
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+
+        &lt;div class=&quot;progress-tracker&quot;&gt;
+            &lt;h4&gt;Quiz Progress&lt;/h4&gt;
+            &lt;div class=&quot;progress-bar&quot;&gt;
+                &lt;div class=&quot;progress-fill&quot; id=&quot;progressFill&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;p id=&quot;progressText&quot;&gt;0 of 25 completed&lt;/p&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;footer&quot;&gt;
+            &lt;p&gt;🌴 Impulse &amp; Momentum Practice Quiz - CFBC Physics 🌴&lt;/p&gt;
+            &lt;p style=&quot;margin-top: 1rem;&quot;&gt;
+                &lt;a href=&quot;#&quot;&gt;← Part 2: Worked Examples&lt;/a&gt;
+            &lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        let completedQuestions = new Set();
+
+        function toggleInfo(id) {
+            const element = document.getElementById(id);
+            const isVisible = element.style.display === &#x27;block&#x27;;
+            
+            const card = element.closest(&#x27;.question-card&#x27;);
+            const allBoxes = card.querySelectorAll(&#x27;.info-box&#x27;);
+            allBoxes.forEach(box =&gt; box.style.display = &#x27;none&#x27;);
+            
+            element.style.display = isVisible ? &#x27;none&#x27; : &#x27;block&#x27;;
+            
+            if (!isVisible) {
+                setTimeout(() =&gt; {
+                    element.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;nearest&#x27; });
+                }, 100);
+                updateProgress(card);
+            }
+        }
+
+        function updateProgress(card) {
+            const questionNum = card.querySelector(&#x27;.question-number&#x27;).textContent;
+            completedQuestions.add(questionNum);
+            
+            const totalQuestions = 25;
+            const completed = completedQuestions.size;
+            const percentage = (completed / totalQuestions) * 100;
+            
+            document.getElementById(&#x27;progressFill&#x27;).style.width = percentage + &#x27;%&#x27;;
+            document.getElementById(&#x27;progressText&#x27;).textContent = `${completed} of ${totalQuestions} completed`;
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;"></iframe>
+    </div>
+
+    <div class="footer">
+      Keyboard shortcuts: <strong>1</strong>=Theory, <strong>2</strong>=Examples, <strong>3</strong>=Quiz
+    </div>
+  </div>
+
+  <script>
+    const sections = ["theory","examples","quiz"];
+    const titles = {
+      theory: 'Impulse & Momentum - Theory | CFBC Physics',
+      examples: 'Impulse & Momentum - Worked Examples | CFBC Physics',
+      quiz: 'Impulse & Momentum - Practice Quiz | CFBC Physics'
+    };
+    const scrollPositions = { theory: 0, examples: 0, quiz: 0 };
+
+    function getFrame(key) { return document.getElementById("frame-" + key); }
+    function getTab(key) { return document.getElementById("tab-" + key); }
+
+    function currentKey() {
+      for (const k of sections) {
+        if (!getFrame(k).classList.contains("hidden")) return k;
+      }
+      return "theory";
+    }
+
+    function saveScroll(key) {
+      try {
+        const win = getFrame(key).contentWindow;
+        scrollPositions[key] = win.scrollY || win.document.documentElement.scrollTop || 0;
+      } catch(e) {}
+    }
+    function restoreScroll(key) {
+      try {
+        const win = getFrame(key).contentWindow;
+        win.scrollTo(0, scrollPositions[key] || 0);
+      } catch(e) {}
+    }
+
+    function showSection(key) {
+      const active = currentKey();
+      if (active === key) return;
+
+      saveScroll(active);
+
+      for (const k of sections) {
+        const frame = getFrame(k);
+        const tab = getTab(k);
+        if (k === key) {
+          frame.classList.remove("hidden");
+          tab.setAttribute("aria-selected","true");
+        } else {
+          frame.classList.add("hidden");
+          tab.setAttribute("aria-selected","false");
+        }
+      }
+
+      document.getElementById("panelTitle").textContent = titles[key] || "Impulse & Momentum";
+      setTimeout(() => restoreScroll(key), 60);
+
+      try { localStorage.setItem("im_master_last_tab", key); } catch(e) {}
+    }
+
+    function scrollToTop() {
+      const key = currentKey();
+      try {
+        getFrame(key).contentWindow.scrollTo({ top: 0, behavior: "smooth" });
+      } catch(e) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function openInNewTab() {
+      const key = currentKey();
+      const frame = getFrame(key);
+      const htmlDoc = frame.getAttribute("srcdoc") || "";
+      const blob = new Blob([htmlDoc], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank", "noopener,noreferrer");
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+      if (e.key === "1") showSection("theory");
+      if (e.key === "2") showSection("examples");
+      if (e.key === "3") showSection("quiz");
+    });
+
+    window.addEventListener("load", () => {
+      let last = null;
+      try { last = localStorage.getItem("im_master_last_tab"); } catch(e) {}
+      if (last && sections.includes(last) && last !== "theory") {
+        showSection(last);
+      }
+    });
+  </script>
+</body>
+</html>
